@@ -1,75 +1,84 @@
 import React, { Component } from 'react'
 import EmployeeService from '../services/EmployeeService'
+import withHook from '../components/withHook';
 
-class CreateEmployeeComponent extends Component{
+class CreateEmployeeComponent extends Component {
     constructor(props){
         super(props);
 
         this.state = {
-            empNo: this.props.match.params.empNo,
+            empNo: this.props.params.empNo,
             empName: '',
             position: ''
         }
-
-        this.changeEmpName = this.changeEmpName.bind(this);
-        this.changePosition = this.changePosition.bind(this);
+        this.changeEmpNoHandler = this.changeEmpNoHandler.bind(this);
+        this.changeEmpNameHandler = this.changeEmpNameHandler.bind(this);
+        this.changePositionHandler = this.changePositionHandler.bind(this);
     }
 
     componentDidMount(){
-
-        // step 4
-        if(this.state.id === '_add'){
+        if(this.state.empNo === '_add'){
             return
         }else{
-            EmployeeService.getEmployeeById(this.state.id).then( (res) =>{
-                let employee = res.data;
-                this.setState({firstName: employee.firstName,
-                    lastName: employee.lastName,
-                    emailId : employee.emailId
-                });
-            });
-        }        
-    }
-    saveOrUpdateEmployee = (e) => {
-        e.preventDefault();
-        let employee = {firstName: this.state.firstName, lastName: this.state.lastName, emailId: this.state.emailId};
-        console.log('employee => ' + JSON.stringify(employee));
-
-        // step 5
-        if(this.state.id === '_add'){
-            EmployeeService.createEmployee(employee).then(res =>{
-                this.props.history.push('/employees');
-            });
-        }else{
-            EmployeeService.updateEmployee(employee, this.state.id).then( res => {
-                this.props.history.push('/employees');
-            });
+            EmployeeService.getEmployeeById(this.state.empNo).then(
+                (res) => {
+                    let employee = res.data;
+                    this.setState({
+                        empNo: employee.empNo,
+                        empName: employee.empName,
+                        position: employee.position
+                    })
+                }
+            )
         }
     }
-    
-    changeFirstNameHandler= (event) => {
-        this.setState({firstName: event.target.value});
+    saveOrUpdateEmployee = (e) =>{
+        e.preventDefault();
+        let employee = {
+            empNo: this.state.empNo,
+            empName: this.state.empName,
+            position: this.state.position
+        }
+        console.log('employee => ' + JSON.stringify(employee));
+
+        if(this.state.empNo === '_add') {
+            EmployeeService.createEmployee(employee).then(res => {
+                    this.props.navigation('/employees');
+                }
+            )
+        }
+        else{
+            EmployeeService.updateEmployee(this.state.empNo, employee).then(res => {
+                this.props.navigation('/employees');
+            })
+        }
     }
 
-    changeLastNameHandler= (event) => {
-        this.setState({lastName: event.target.value});
+    changeEmpNoHandler = (event) => {
+        this.setState({empNo: event.target.value});
     }
 
-    changeEmailHandler= (event) => {
-        this.setState({emailId: event.target.value});
+    changeEmpNameHandler = (event) => {
+        this.setState({empName: event.target.value});
+    }
+
+    changePositionHandler = (event) => {
+        this.setState({position: event.target.value})
     }
 
     cancel(){
-        this.props.history.push('/employees');
+        this.props.navigation('/employees');
+
     }
 
     getTitle(){
-        if(this.state.id === '_add'){
-            return <h3 className="text-center">Add Employee</h3>
+        if(this.state.empNo === '_add'){
+            return <h3 className='text-center'>Add Employee</h3>
         }else{
-            return <h3 className="text-center">Update Employee</h3>
+            return <h3 className='text-center'>Update Employee</h3>
         }
     }
+    
     render() {
         return (
             <div>
@@ -83,19 +92,19 @@ class CreateEmployeeComponent extends Component{
                                 <div className = "card-body">
                                     <form>
                                         <div className = "form-group">
-                                            <label> First Name: </label>
-                                            <input placeholder="First Name" name="firstName" className="form-control" 
-                                                value={this.state.firstName} onChange={this.changeFirstNameHandler}/>
+                                            <label> EmpNo: </label>
+                                            <input placeholder="EmpNo" name="empNo" className="form-control" 
+                                                value={this.state.empNo} onChange={this.changeEmpNoHandler}/>
                                         </div>
                                         <div className = "form-group">
-                                            <label> Last Name: </label>
-                                            <input placeholder="Last Name" name="lastName" className="form-control" 
-                                                value={this.state.lastName} onChange={this.changeLastNameHandler}/>
+                                            <label> Employee Name: </label>
+                                            <input placeholder="Employee Name" name="empName" className="form-control" 
+                                                value={this.state.empName} onChange={this.changeEmpNameHandler}/>
                                         </div>
                                         <div className = "form-group">
-                                            <label> Email Id: </label>
-                                            <input placeholder="Email Address" name="emailId" className="form-control" 
-                                                value={this.state.emailId} onChange={this.changeEmailHandler}/>
+                                            <label> Employee Postion: </label>
+                                            <input placeholder="Position" name="position" className="form-control" 
+                                                value={this.state.position} onChange={this.changePositionHandler}/>
                                         </div>
 
                                         <button className="btn btn-success" onClick={this.saveOrUpdateEmployee}>Save</button>
@@ -109,6 +118,8 @@ class CreateEmployeeComponent extends Component{
             </div>
         )
     }
+
 }
 
-export default CreateEmployeeComponent
+
+export default withHook(CreateEmployeeComponent);

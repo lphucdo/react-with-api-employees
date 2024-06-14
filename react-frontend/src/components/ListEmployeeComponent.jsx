@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import EmployeeService from '../services/EmployeeService';
+import withHook from '../components/withHook';
 
 class ListEmployeeComponent extends Component{
     constructor(props){
@@ -20,15 +21,15 @@ class ListEmployeeComponent extends Component{
     }
 
     viewEmployee(empNo){
-        this.props.history.push(`/employee/${empNo}`);
-        // window.location.reload();
+        this.props.navigation(`/employee/${empNo}`);
     }
 
     editEmployee(empNo){
-        this.props.history.push(`/employee/${empNo}`);
+        this.props.navigation(`/add-employee/${empNo}`);
     }
 
     componentDidMount(){
+
         EmployeeService.getEmployees().then((res) => {
             this.setState({
                 employees: res.data
@@ -37,7 +38,7 @@ class ListEmployeeComponent extends Component{
     }
 
     addEmployee(){
-        this.props.history.push(`/add-employee/_add`);
+        this.props.navigation(`/add-employee/_add`);
     }
 
     render(){
@@ -86,4 +87,4 @@ class ListEmployeeComponent extends Component{
 
 }
 
-export default ListEmployeeComponent
+export default withHook(ListEmployeeComponent);
