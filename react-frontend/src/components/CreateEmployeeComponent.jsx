@@ -7,6 +7,7 @@ class CreateEmployeeComponent extends Component {
         super(props);
 
         this.state = {
+            id:this.props.params.empNo,
             empNo: this.props.params.empNo,
             empName: '',
             position: ''
@@ -17,7 +18,7 @@ class CreateEmployeeComponent extends Component {
     }
 
     componentDidMount(){
-        if(this.state.empNo === '_add'){
+        if(this.state.id === '_add'){
             return
         }else{
             EmployeeService.getEmployeeById(this.state.empNo).then(
@@ -41,7 +42,7 @@ class CreateEmployeeComponent extends Component {
         }
         console.log('employee => ' + JSON.stringify(employee));
 
-        if(this.state.empNo === '_add') {
+        if(this.state.id === '_add') {
             EmployeeService.createEmployee(employee).then(res => {
                     this.props.navigation('/employees');
                 }
@@ -72,7 +73,7 @@ class CreateEmployeeComponent extends Component {
     }
 
     getTitle(){
-        if(this.state.empNo === '_add'){
+        if(this.state.id === '_add'){
             return <h3 className='text-center'>Add Employee</h3>
         }else{
             return <h3 className='text-center'>Update Employee</h3>
