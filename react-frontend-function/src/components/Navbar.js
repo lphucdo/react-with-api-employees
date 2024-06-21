@@ -23,6 +23,12 @@ function Navbar ()
               <li className="nav-item">
                 <Link className="nav-link" to="/add-employee">Add Employee</Link>
               </li>
+              <li className="nav-item">
+                <Link className="nav-link" to="/login">Đăng nhập</Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link" to="/register">Đăng Ký</Link>
+              </li>
             </ul>
           </div>
         </div>

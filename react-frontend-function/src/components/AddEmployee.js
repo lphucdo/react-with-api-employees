@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import EmployeeService from '../services/EmployeeService';
+import swal from 'sweetalert';
 
 function AddEmployee() {
     const navigate = useNavigate();
@@ -40,6 +41,7 @@ function AddEmployee() {
         //     }
         // });
         EmployeeService.createEmployee(data).then(res=>{
+            swal("Success!", "Them Thanh Cong", "success");
             navigate(`/employees`)
         })
     };
