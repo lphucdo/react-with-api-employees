@@ -6,6 +6,7 @@ import FooterComponent from './components/FooterComponent';
 import CreateEmployeeComponent from './components/CreateEmployeeComponent';
 import ViewEmployeeComponent from './components/ViewEmployeeComponent';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import FileUploadComponent from './components/FileUploadComponent';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
             <Route path="/employees" element={<ListEmployeeComponent />} />
             <Route path="/add-employee/:empNo" element={<CreateEmployeeComponent />} />
             <Route path="/employee/:empNo" element={<ViewEmployeeComponent />} />
+            <Route path='/upload' element={<FileUploadComponent />}/>
           </Routes>
         </div>
         <FooterComponent />

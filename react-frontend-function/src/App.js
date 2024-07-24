@@ -5,24 +5,33 @@ import Navbar from './components/Navbar';
 import AddEmployee from './components/AddEmployee';
 import ViewEmployee from './components/ViewEmployee';
 import EditEmployee from './components/EditEmployee';
-
-import axios from 'axios';
 import LoginPage from './components/LoginPage';
 import SignUpPage from './components/SignUpPage';
-axios.defaults.baseURL = "http://localhost:8080/"
-
+import MyProfile from './components/MyProfile';
+import FileUploadComponent from './components/FileUploadComponent';
+import ViewProduct from './components/ViewProduct';
+import ViewCart from './components/ViewCart';
+import MyCart from './components/MyCart';
+import AddProduct from './components/AddProduct';
 function App() {
   return (
     <div className="App">
       <Router>
         <Navbar />
         <Routes>
-          <Route path='/' element={<ViewEmployee />}/>
+          <Route path='/' element={<ViewProduct />}/>
           <Route path='/employees' element={<ViewEmployee />}/>
+          <Route path='/products' element={<ViewProduct />}/>
+          <Route path='/carts' element={<ViewCart />}/>
           <Route path='/add-employee' element={<AddEmployee />}/>
-          <Route path='/edit-employee/:empNo' element={<EditEmployee />}/>
+          <Route path='/add-product' element={<AddProduct />}/>
+          <Route path='/edit-employee/:id' element={<EditEmployee />}/>
           <Route path='/login' element={<LoginPage />}/>
           <Route path='/register' element={<SignUpPage />}/>
+          <Route path='/profile' element={<MyProfile />}/>
+          <Route path='/my-cart' element={<MyCart />}/>
+          <Route path='/upload' element={<FileUploadComponent />}/>
+          <Route path='/oi' element={<LoginPage />}/>
         </Routes>
       </Router>
     </div>

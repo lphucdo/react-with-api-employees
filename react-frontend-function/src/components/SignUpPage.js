@@ -1,43 +1,43 @@
 import React, {useState} from 'react';
 import { useNavigate } from 'react-router-dom';
-import UserService from '../services/UserService';
 import {MDBContainer, MDBInput, MDBBtn} from 'mdb-react-ui-kit'
-
+import EmployeeService from '../services/EmployeeService';
+import swal from "sweetalert"
 function SignUpPage(){
-    const [fullName, setFullname] = useState('');
-    const [email, setEmail] = useState('');
     const [username, setUserName] = useState('');
     const [password, setPassword] = useState('');
+    const [empName, setEmpname] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [role, setRole] = useState('ROLE_CUSTOMER');
-    const [mobile, setMobile] = useState('');
+    const [position, setPosition] = useState('');
     const [error, setError] = useState('');
     const navigation = useNavigate();
     
 
     const handleSignup = async () => {
         try {
-            if(!fullName || !email || !username || !password || !confirmPassword || !mobile){
+            if(!username || !password || !confirmPassword){
                 setError('Kiem tra va dien day du cac truong');
                 return;
             }
 
             if(password !== confirmPassword){
-                throw new Error("'Mat Khau Khong Trung Khop'");
+                throw new Error("Mat Khau Khong Trung Khop");
             }
 
-            const respone = await UserService.checkRegister({
-                email,
-                fullName,
-                username,
-                password,
-                role,
-                mobile
-            })
+            const data = {
+                username: username,
+                password: confirmPassword,
+                empName: empName,
+                position: position
+            };
+            const token = localStorage.getItem('token')
+            const response = await EmployeeService.register(data,token)
 
-            console.log(respone.data);
+            console.log(response);
+            swal("Sucessful" , response.message ? response.message : "THem thanh cong" , "success")
 
-            navigation('/users')
+
+            navigation('/login')
             
         } catch (error) {
             console.log("Dang ky that bai: ", error.respone ? error.respone.data : error.message);
@@ -50,12 +50,9 @@ function SignUpPage(){
             <div className="border rounded-lg p-4" style={{width: '600px', height: 'auto'}}> 
                 <MDBContainer className="p-3"> 
                     <h2 className="mb-4 text-center">Trang Đăng ký</h2> 
-                    {/* Render error message if exists */} 
                     {error && <p className="text-danger">{error}</p>} 
-                    <MDBInput wrapperClass='mb-3' id='fullName' placeholder={"Full Name"} value={fullName} type='text'
-                              onChange={(e) => setFullname(e.target.value)}/> 
-                    <MDBInput wrapperClass='mb-3' placeholder='Email Address' id='email' value={email} type='email'
-                              onChange={(e) => setEmail(e.target.value)}/> 
+                    <MDBInput wrapperClass='mb-3' placeholder='Employee name' id='empName' value={empName} type='text'
+                              onChange={(e) => setEmpname(e.target.value)}/> 
                     <MDBInput wrapperClass='mb-3' placeholder='Username' id='username' value={username} type='text'
                               onChange={(e) => setUserName(e.target.value)}/> 
                     <MDBInput wrapperClass='mb-3' placeholder='Password' id='password' type='password' value={password} 
@@ -63,14 +60,9 @@ function SignUpPage(){
                     <MDBInput wrapperClass='mb-3' placeholder='Confirm Password' id='confirmPassword' type='password'
                               value={confirmPassword} 
                               onChange={(e) => setConfirmPassword(e.target.value)}/> 
-                    <MDBInput wrapperClass='mb-2' placeholder='Mobile Number' id='mobileNumber' value={mobile} 
-                              type='text'
-                              onChange={(e) => setMobile(e.target.value)}/> 
-                    <label className="form-label mb-1">Role:</label> 
-                    <select className="form-select mb-4" value={role} onChange={(e) => setRole(e.target.value)}> 
-                        <option value="ROLE_CUSTOMER">User</option> 
-                        <option value="ROLE_ADMIN">Admin</option> 
-                    </select> 
+                    <MDBInput wrapperClass='mb-3' placeholder='position' id='position' type='text'
+                              value={position} 
+                              onChange={(e) => setPosition(e.target.value)}/> 
                     <button className="mb-4 d-block mx-auto fixed-action-btn btn-primary"
                             style={{height: '40px', width: '100%'}} 
                             onClick={handleSignup}>Đăng ký 

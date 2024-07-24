@@ -1,28 +1,50 @@
-import React, {useState} from "react";
-import axios from "axios";
+import React, {useState, useEffect} from "react";
 import { useNavigate } from "react-router-dom";
 import { MDBContainer, MDBInput, MDBBtn } from "mdb-react-ui-kit";
-import UserService from "../services/UserService";
-
+import EmployeeService from "../services/EmployeeService";
+import swal from "sweetalert";
 function LoginPage() {
-    const [username, setUserName] = useState('');
+    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-
+    const authenticated = EmployeeService.isAuthenticated();
     const navigation = useNavigate();
 
-    const handleLogin =async () => {
+    useEffect(() => {
+        if(authenticated){
+            navigation('/');
+        }
+    }, []);
+    
+    const handleLogin = async (e) => {
+
+        e.preventDefault();
         try {
             if(!username || !password){
                 setError("Hay Dien day du tai khoan va mat khau");
                 return;
             }
-            const respose = await UserService.checkLogin({username,password});
-            console.log(respose.data);
-            navigation("/");
+                
+            const userData = await EmployeeService.login(username,password);
+            if(userData.token){
+                localStorage.setItem('token', userData.token);
+                localStorage.setItem('position', userData.position);
+                localStorage.setItem('isAdmin', EmployeeService.isAdmin());
+                swal("Successful!", userData.message ? userData.message : "Đăng nhập thanh cong", "success")
+                navigation('/');
+            }else{
+                setError(userData.message ? userData.message: userData.error);
+                setTimeout(()=>{
+                    setError('');
+                }, 5000);
+            }
         } catch (error) {
-            console.log("LOginfailed");
-            setError("Sai tk hoặc mk")
+            console.log('hi');
+            swal("Failed!", "Đăng nhập thất bại", "error");
+            
+            setTimeout(()=>{
+                setError('');
+            }, 10000)
         }
     }
 
@@ -31,7 +53,7 @@ function LoginPage() {
             <div className="border rounded-lg p-4" style={{ width: '500px', height: 'auto' }}> 
                 <MDBContainer className="p-3"> 
                     <h2 className="mb-4 text-center">Trang Đăng nhập</h2> 
-                    <MDBInput wrapperClass='mb-4' placeholder='UserName' id='username' value={username} type='text' onChange={(e) => setUserName(e.target.value)} /> 
+                    <MDBInput wrapperClass='mb-4' placeholder='Username' id='username' value={username} type='text' onChange={(e) => setUsername(e.target.value)} /> 
                     <MDBInput wrapperClass='mb-4' placeholder='Password' id='password' type='password' value={password} onChange={(e) => setPassword(e.target.value)} /> 
                     {error && <p className="text-danger">{error}</p>} {/* Render error message if exists */} 
                     <button className="mb-4 d-block btn-primary" style={{ height:'50px',width: '100%' }} onClick={handleLogin}>Đăng nhập</button> 

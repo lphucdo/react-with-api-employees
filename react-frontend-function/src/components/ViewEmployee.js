@@ -6,32 +6,55 @@ import EmployeeService from "../services/EmployeeService";
 function ViewEmployee() {
     const [loading, setLoading] = useState(true);
     const [employees, setEmployees] = useState([]);
+    const token = localStorage.getItem('token');
+    const authenticated = EmployeeService.isAuthenticated();
+    const isAdmin = EmployeeService.isAdmin();
+    console.log("You are admin? " + isAdmin);
+    const navigate = useNavigate();
 
     useEffect(() => {
-        EmployeeService.getEmployees().then(res => {
-            if (res.status === 200) {
-                setEmployees(res.data);
-                setLoading(false);
-            }
-        })
+        if(!authenticated){
+            navigate('/login');
+        }else{
+            fetchEmployees();
+
+        }
     }, []);
 
-    const deleteEmployee = (e, empNo) => {
-        e.preventDefault();
+    const fetchEmployees = async () => {
+        console.log("Lay du lieu tu may chu...");
+        try {
+            const userData = await EmployeeService.getAllUser(token);
+            console.log(userData);
+            setEmployees(userData.listEmp);
+            setLoading(false)
+        } catch (error) {
+            console.error('Error fetching users:', error);
+        }
+    }
 
-        const thisClicked = e.currentTarget;
-        thisClicked.innerText = "Deleting";
+    
 
-        EmployeeService.deleteEmployee(empNo).then(res => {
-            if(res.status === 200){
-                swal("Deleted!", "Thanh Cong", "success");
-                thisClicked.closest("tr").remove();
-            }
-            else if(res.status === 404){
-                swal("Error", "That Bai", "error");
+    const deleteEmployee = async (e, id) => {
+
+        var confirm = window.confirm("Are you sure to delete this employee???")
+        
+        if(confirm){
+            const thisClicked = e.currentTarget;
+            try {
+                thisClicked.innerText = "Deleting";
+                const token = localStorage.getItem('token');
+                const response = await EmployeeService.deleteEmployee(id, token);
+                if(response){
+                    console.log(response);
+                    swal("Deleted!",response.message ? response.message : "Thanh Cong", "success");
+                    thisClicked.closest("tr").remove();
+                }
+            } catch (error) {
                 thisClicked.innerText = "Delete";
+                swal("Error", "That Bai", "error");
             }
-        })
+        }
     }
 
     if(loading){
@@ -41,16 +64,17 @@ function ViewEmployee() {
         employee_HTMLABLE = employees.map((employee, index) => {
             return (
                 <tr key={index}>
-                    <td>{employee.empNo}</td>
+                    <td>{employee.id}</td>
                     <td>{employee.empName}</td>
+                    <td>{employee.username}</td>
                     <td>{employee.position}</td>
 
                     <td>
-                        <Link to={`/edit-employee/${employee.empNo}`} className="btn btn-success btn-sm">Edit</Link>
+                        <Link to={`/edit-employee/${employee.id}`} className="btn btn-success btn-sm">Edit</Link>
                     </td>
 
                     <td>
-                        <button type="button" onClick={(e) => deleteEmployee(e, employee.empNo)} className="btn btn-danger btn-sm"> Delete</button>
+                        <button type="button" onClick={(e) => deleteEmployee(e, employee.id)} className="btn btn-danger btn-sm"> Delete</button>
                     </td>
                 </tr>
             )
@@ -73,9 +97,10 @@ function ViewEmployee() {
                                 <table className="table table-bordered table-striped">
                                     <thead>
                                         <tr>
-                                            <th>empNo</th>
-                                            <th>empName</th>
-                                            <th>position</th>
+                                            <th>Id</th>
+                                            <th>EmpployeeName</th>
+                                            <th>username</th>
+                                            <th>Position</th>
                                         </tr>
                                     </thead>
                                     <tbody>

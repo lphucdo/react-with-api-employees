@@ -5,66 +5,61 @@ import EmployeeService from '../services/EmployeeService';
 
 function EditEmployee() {
     const navigate = useNavigate();
-    const params = useParams();
+    const {id} = useParams();
     const [loading, setLoading] = useState(true);
     const [employeeInput, setEmployee] = useState({});
     const [errorInput, setError] = useState([]);
-
-    console.log(employeeInput);
+    console.log("id: " + id);
+    
 
     useEffect(() => {
-        console.log(params.empNo);
-        const employee_id = params.empNo;
-        EmployeeService.getEmployeeById(employee_id).then( res => {
-            console.log(res);
-            if(res.status === 200)
-            {
-                setEmployee(res.data);
+        fecthDataById();
+    }, [id]);
+    
+    async function fecthDataById (){
+        try {
+            const token = localStorage.getItem('token');
+            const response = await EmployeeService.getEmployeeById(id, token);
+            console.log(response);
+            if(response.statusCode == 200){
+                setEmployee(response.employee);
                 setLoading(false);
+            }else{
+                swal("Error",response.message ? response.message : "Loi","error");
             }
-            else if(res.status === 404)
-            {
-                swal("Error","Loi","error");
-                navigate('/employees');
-            }
-        });
+        } catch (error) {
+            swal('Error', "Co loi xay ra", 'error')
+        }
+    }
 
-    }, [navigate]);
 
     const handleInput = (e) => {
-        e.persist();
+        e.preventDefault();
         setEmployee({...employeeInput, [e.target.name]: e.target.value });
     }
 
-    const updateEmployee= (e) => {
+    const updateEmployee = async (e) => {
         e.preventDefault();
-        
-        const employee_empNo = params.empNo;
-        // const data = studentInput;
-        const data = {
-            empNo: employeeInput?.empNo,
-            empName: employeeInput?.empName,
-            position: employeeInput?.position,
-        }
+        try {
+            const token = localStorage.getItem('token');
+            const data = {
+                id: employeeInput?.id,
+                username: employeeInput?.username,
+                password: employeeInput?.password,
+                empName: employeeInput?.empName,
+                position: employeeInput?.position,
+            }
 
-        EmployeeService.updateEmployee(employee_empNo, data).then(res=>{
-            if(res.status === 200)
-            {
-                swal("Success","Success","success");
-                setError([]);
-                navigate('/employees');
+            const response = await EmployeeService.updateEmployee(id, data, token);
+            console.log(response);
+
+            if(response.statusCode === 200){
+                swal("Success",response.message ? response.message : "Success updated","success");
+                navigate('/employees');  
             }
-            else if(res.status === 422)
-            {
-                swal("All fields are mandetory","","error");
-                setError(res.validationErrors);
-            }
-            else if(res.status === 404)
-            {
-                swal("Error",res.message,"error");
-                navigate('/employees');
-            }
-        });
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     if(loading)
@@ -87,9 +82,19 @@ function EditEmployee() {
                                 
                                 <form onSubmit={updateEmployee} >
                                     <div className="form-group mb-3">
-                                        <label>Employee No</label>
-                                        <input type="text" name="empNo" onChange={handleInput} value={employeeInput?.empNo} className="form-control" />
-                                        <span className="text-danger">{errorInput.empNo}</span>
+                                        <label>Employee Id</label>
+                                        <input type="text" name="id" onChange={handleInput} value={employeeInput?.id} className="form-control" />
+                                        <span className="text-danger">{errorInput.id}</span>
+                                    </div>
+                                    <div className="form-group mb-3">
+                                        <label>Employee Username</label>
+                                        <input type="text" name="username" onChange={handleInput} value={employeeInput?.username} className="form-control" />
+                                        <span className="text-danger">{errorInput.username}</span>
+                                    </div>
+                                    <div className="form-group mb-3">
+                                        <label>Employee Password</label>
+                                        <input type="text" name="password" onChange={handleInput} value={employeeInput?.password} className="form-control" />
+                                        <span className="text-danger">{errorInput.password}</span>
                                     </div>
                                     <div className="form-group mb-3">
                                         <label>Employee Name</label>
@@ -99,7 +104,8 @@ function EditEmployee() {
                                     
                                     <div className="form-group mb-3">
                                         <label>Employee Position</label>
-                                        <input type="text" name="position" onChange={handleInput} value={employeeInput?.position}  className="form-control" />
+                                        <input type="text" name="position" onChange={handleInput} value={employeeInput?.position} className="form-control" />
+
                                         <span className="text-danger">{errorInput.position}</span>
                                     </div>
                                     <div className="form-group mb-3">

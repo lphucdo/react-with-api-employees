@@ -1,49 +1,46 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate} from 'react-router-dom';
 import EmployeeService from '../services/EmployeeService';
 import swal from 'sweetalert';
 
 function AddEmployee() {
     const navigate = useNavigate();
-
+    const authenticated = EmployeeService.isAuthenticated();
+    const token = localStorage.getItem('token');
     const [employeeInput, setEmployee] = useState({
-        empNo: '',
+        username: '',
+        password: '',
         empName: '',
-        position: '',
-        error_list: []
+        position: ''
     });
+
+    useEffect(() => {
+        if(!authenticated){
+            navigate('/login');
+        }
+    }, []);
 
     const handleInput = (e) => {
         setEmployee({ ...employeeInput, [e.target.name]: e.target.value });
     };
 
-    const saveEmployee = (e) => {
+
+    const saveEmployee = async (e) => {
         e.preventDefault();
 
         const data = {
-            empNo: employeeInput.empNo,
+            username: employeeInput.username,
+            password: employeeInput.password,
             empName: employeeInput.empName,
             position: employeeInput.position
         };
-
-        // axios.post(`/employee/addEmp`, data).then(res => {
-        //     if (res.data.status === 200) {
-        //         swal("Success!", res.data.message, "success");
-        //         setEmployee({
-        //             empNo: '',
-        //             empName: '',
-        //             position: '',
-        //             error_list: []
-        //         });
-        //         navigate('/employees');
-        //     } else if (res.data.status === 422) {
-        //         setEmployee({ ...employeeInput, error_list: res.data.validate_err });
-        //     }
-        // });
-        EmployeeService.createEmployee(data).then(res=>{
-            swal("Success!", "Them Thanh Cong", "success");
-            navigate(`/employees`)
-        })
+        
+        const response = await EmployeeService.register(data, token);
+        console.log(response);
+        if(response){
+            swal("Thành Công", response.message ? response.message : "Thành Công", 'success')
+            navigate('/employees')
+        }
     };
 
     return (
@@ -60,19 +57,24 @@ function AddEmployee() {
                             <div className="card-body">
                                 <form onSubmit={saveEmployee}>
                                     <div className="form-group mb-3">
-                                        <label>Employee No</label>
-                                        <input type="text" name="empNo" onChange={handleInput} value={employeeInput.empNo} className="form-control" />
-                                        <span className="text-danger">{employeeInput.error_list.empNo}</span>
+                                        <label>Username</label>
+                                        <input type="text" name="username" onChange={handleInput} value={employeeInput.username} className="form-control" />
+                                        <span className="text-danger"></span>
+                                    </div>
+                                    <div className="form-group mb-3">
+                                        <label>Password</label>
+                                        <input type="password" name="password" onChange={handleInput} value={employeeInput.password} className="form-control" />
+                                        <span className="text-danger"></span>
                                     </div>
                                     <div className="form-group mb-3">
                                         <label>Employee Name</label>
                                         <input type="text" name="empName" onChange={handleInput} value={employeeInput.empName} className="form-control" />
-                                        <span className="text-danger">{employeeInput.error_list.empName}</span>
+                                        <span className="text-danger"></span>
                                     </div>
                                     <div className="form-group mb-3">
                                         <label>Employee Position</label>
                                         <input type="text" name="position" onChange={handleInput} value={employeeInput.position} className="form-control" />
-                                        <span className="text-danger">{employeeInput.error_list.position}</span>
+                                        <span className="text-danger"></span>
                                     </div>
 
                                     <div className="form-group mb-3">
