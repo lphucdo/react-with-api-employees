@@ -2,6 +2,7 @@ import React,{useState} from "react";
 import CartService from "../services/CartService";
 import swal from "sweetalert";
 import { Link } from "react-router-dom";
+import ProductService from "../services/ProductService";
 function QuantityInput({prod,index,isAdmin}){
 
     const [quantity,setQuantity] = useState(1);
@@ -14,7 +15,6 @@ function QuantityInput({prod,index,isAdmin}){
                 productId: id,
                 quantity: quantity
             }
-            console.log(payload);
             try {
                 const response = await CartService.addCart(payload , token);
                 swal("Successfully", response.message ? response.message : "Them thanh cong" , "success");
@@ -22,6 +22,28 @@ function QuantityInput({prod,index,isAdmin}){
                 throw error;
             }
         }
+    }
+    const deleteProduct = async (e, id) => {
+        const thisClicked = e.currentTarget;
+        try {
+            const response = await ProductService.deleteProductById(id, token);
+            swal("Successfully", response.message ? response.message : "Ok" , "success");
+            thisClicked.closest("tr").remove();
+        } catch (error) {
+            swal("Failed" , "Xoa That Bai" , "error");
+            throw error;
+        }
+    }
+    const updateQuantity = async (e) => {
+        e.preventDefault();
+        window.confirm("Đang phát triển phong cách.")
+        // try {
+        //     const data = {
+        //         quantity: prod.quantity
+        //     }
+        // } catch (error) {
+            
+        // }
     }
 
     return (
@@ -47,10 +69,10 @@ function QuantityInput({prod,index,isAdmin}){
 
                 <>
                     <td>
-                        <Link to={`/edit-product`} className="btn btn-success btn-sm">Edit</Link>
+                        <button type="button" onClick={(e)=>updateQuantity(e,prod.id)} className="btn btn-success btn-sm">Update Quantity</button>
                     </td>
                     <td>
-                        <button type="button" onClick={()=>addToCart(prod.id)} className="btn btn-danger btn-sm">Delete</button>
+                        <button type="button" onClick={(e)=>deleteProduct(e,prod.id)} className="btn btn-danger btn-sm">Delete</button>
                     </td></>
                     
                 :

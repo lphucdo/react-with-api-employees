@@ -61,7 +61,7 @@ function ViewProduct (){
                                             <th>Product Name</th>
                                             <th>Description</th>
                                             <th>Price</th>
-                                            <th>Quantity</th>
+                                            <th>Quantity {isAdmin === true ? "left" : ""}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
