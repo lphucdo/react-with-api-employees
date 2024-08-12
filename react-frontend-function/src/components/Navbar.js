@@ -4,12 +4,14 @@ import EmployeeService from '../services/EmployeeService';
 
 function Navbar ()
 {
-  const [isAdmin, setAdmin] = useState();
-  const [isAuthenticated,setAuthenticated] = useState();
+  const [isAdmin, setAdmin] = useState(false);
+  const [isAuthenticated,setAuthenticated] = useState(false);
+
   useEffect(()=>{
     setAdmin(EmployeeService.isAdmin());
     setAuthenticated(EmployeeService.isAuthenticated());
-  },[isAdmin,isAuthenticated])
+  },[])
+
   const handleLogout = () => {
     const confirm = window.confirm("Do u want to logout this user???")
     if(confirm){
@@ -49,53 +51,47 @@ function Navbar ()
                   
                   </>
               ): <></>}
-              {!isAuthenticated ? (
+              {!localStorage.getItem("position") ? 
                 <li className="nav-item">
                   <Link className="nav-link" to="/login">Login</Link>
                 </li>
-              ) : (
+               : 
                 <li>
-                <div className="dropdown text-end">
-                  <a href="#" className="d-block link-body-emphasis text-decoration-none dropdown-toggle"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
-                  >
-                    <img
-                      src="https://github.com/mdo.png"
-                      alt="mdo"
-                      style={{ width: '32px', height: '32px' }}
-                      className="rounded-circle"
-                    />
-                  </a>
-                  <ul className="dropdown-menu text-small">
-                    <li>
-                      <a className="dropdown-item" href="#">
-                        New project...
-                      </a>
-                    </li>
-                    <li>
-                      <a className="dropdown-item" href="#">
-                        <Link className='' to="/my-cart">Cart</Link>
-                      </a>
-                    </li>
-                    <li>
-                      <a className="dropdown-item" href="#">
-                        <Link className='' to="/profile">Profile</Link>
-                      </a>
-                    </li>
-                    <li>
-                      <hr className="dropdown-divider" />
-                    </li>
-                    <li>
-                      <a className="dropdown-item" href="#">
-                        <Link className="" onClick={handleLogout} to="/">Logout</Link>
-                      </a>
-                    </li>
-                  </ul>
-                </div>
+                  <div className="dropdown text-end">
+                    <a href="/my-info" className="d-block link-body-emphasis text-decoration-none dropdown-toggle"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      <img
+                        src="https://github.com/mdo.png"
+                        alt="mdo"
+                        style={{ width: '32px', height: '32px' }}
+                        className="rounded-circle"
+                      />
+                    </a>
+                    <ul className="dropdown-menu text-small">
+                      <li>
+                        <a className="dropdown-item" href="/">
+                          New project...
+                        </a>
+                      </li>
+                      <li>
+                          <Link className='' to="/my-cart">Cart</Link>
+                      </li>
+                      <li>
+                          <Link className='' to="/profile">Profile</Link>
+                      </li>
+                      <li>
+                        <hr className="dropdown-divider" />
+                      </li>
+                      <li>
+                          <Link className="" onClick={handleLogout} to="/">Logout</Link>
+                      </li>
+                    </ul>
+                  </div>
               </li>
 
-              )}
+              }
 
               
             </ul>

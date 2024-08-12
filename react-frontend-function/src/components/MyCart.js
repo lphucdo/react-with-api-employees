@@ -22,7 +22,7 @@ function MyCart(){
         }
     }
     const handleCODPayment = async () => {
-        window.confirm("HEllo");
+        window.confirm("Phong Cach");
     }
     if(loading){
         return <h4>Loading Cart...</h4>

@@ -28,7 +28,7 @@ function LoginPage() {
             const userData = await EmployeeService.login(username,password);
             if(userData.token){
                 localStorage.setItem('token', userData.token);
-                localStorage.setItem('position', userData.position);
+                localStorage.setItem('role', userData.role);
                 localStorage.setItem('isAdmin', EmployeeService.isAdmin());
                 swal("Successful!", userData.message ? userData.message : "Đăng nhập thanh cong", "success")
                 navigation('/');
@@ -53,8 +53,8 @@ function LoginPage() {
             <div className="border rounded-lg p-4" style={{ width: '500px', height: 'auto' }}> 
                 <MDBContainer className="p-3"> 
                     <h2 className="mb-4 text-center">Trang Đăng nhập</h2> 
-                    <MDBInput wrapperClass='mb-4' placeholder='Username' id='username' value={username} type='text' onChange={(e) => setUsername(e.target.value)} /> 
-                    <MDBInput wrapperClass='mb-4' placeholder='Password' id='password' type='password' value={password} onChange={(e) => setPassword(e.target.value)} /> 
+                    <MDBInput wrapperClass='mb-4' placeholder='Username' id='username' value={username} type='text' onChange={(e) => setUsername(e.target.value)} required/> 
+                    <MDBInput wrapperClass='mb-4' placeholder='Password' id='password' type='password' value={password} onChange={(e) => setPassword(e.target.value)} required/> 
                     {error && <p className="text-danger">{error}</p>} {/* Render error message if exists */} 
                     <button className="mb-4 d-block btn-primary" style={{ height:'50px',width: '100%' }} onClick={handleLogin}>Đăng nhập</button> 
                     <div className="text-center"> 

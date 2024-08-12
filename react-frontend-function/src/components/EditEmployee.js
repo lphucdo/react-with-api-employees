@@ -20,7 +20,6 @@ function EditEmployee() {
         try {
             const token = localStorage.getItem('token');
             const response = await EmployeeService.getEmployeeById(id, token);
-            console.log(response);
             if(response.statusCode == 200){
                 setEmployee(response.employee);
                 setLoading(false);
@@ -48,6 +47,7 @@ function EditEmployee() {
                 password: employeeInput?.password,
                 empName: employeeInput?.empName,
                 position: employeeInput?.position,
+                image: employeeInput?.image
             }
 
             const response = await EmployeeService.updateEmployee(id, data, token);
@@ -105,6 +105,12 @@ function EditEmployee() {
                                     <div className="form-group mb-3">
                                         <label>Employee Position</label>
                                         <input type="text" name="position" onChange={handleInput} value={employeeInput?.position} className="form-control" />
+
+                                        <span className="text-danger">{errorInput.position}</span>
+                                    </div>
+                                    <div className="form-group mb-3">
+                                        <label>Employee Image</label>
+                                        <input type="text" name="image" onChange={handleInput} value={employeeInput?.image} className="form-control" />
 
                                         <span className="text-danger">{errorInput.position}</span>
                                     </div>

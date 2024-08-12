@@ -119,23 +119,23 @@ class EmployeeService {
         localStorage.clear();
     }
 
-    static isAuthenticated(){
-        const token = localStorage.getItem('token');
-        return !!token;
-    }
+    
     static getToken(){
         const token = localStorage.getItem('token');
         return token;
     }
-
+    static isAuthenticated(){
+        const token = localStorage.getItem('token');
+        return !!token;
+    }
     static isAdmin(){
-        const position = localStorage.getItem('position');
-        return position === 'ADMIN';
+        const role = localStorage.getItem('role');
+        return role === 'ADMIN';
     }
 
     static isUser(){
-        const position = localStorage.getItem('position');
-        return position === 'USER';
+        const role = localStorage.getItem('role');
+        return role === 'USER';
     }
 
     static adminOnly(){

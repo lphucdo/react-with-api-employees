@@ -10,7 +10,8 @@ function AddProduct(){
         description: '',
         productName: '',
         price: '',
-        quantity: ''
+        quantity: '',
+        image: ''
     });
 
     const handleInput = (e) => {
@@ -22,7 +23,8 @@ function AddProduct(){
             description: productInput.description,
             productName: productInput.productName,
             price: productInput.price,
-            quantity: productInput.quantity
+            quantity: productInput.quantity,
+            image: productInput.image
         }
         
         const response = await ProductService.addProduct(data, token);
@@ -65,6 +67,13 @@ function AddProduct(){
                                         <input type="text" name="quantity" onChange={handleInput} value={productInput.quantity} className="form-control" />
                                         <span className="text-danger"></span>
                                     </div>
+
+                                    <div className="form-group mb-3">
+                                        <label>Image</label>
+                                        <input type="text" name="image" onChange={handleInput} value={productInput.image} className="form-control" />
+                                        <span className="text-danger"></span>
+                                    </div>
+
 
                                     <div className="form-group mb-3">
                                         <button type="submit" className="btn btn-primary">Save Product</button>

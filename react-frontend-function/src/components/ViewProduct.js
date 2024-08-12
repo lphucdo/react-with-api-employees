@@ -1,79 +1,90 @@
-import React,{useState, useEffect} from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 import swal from "sweetalert";
 import ProductService from "../services/ProductService";
-import QuantityInput from "./QuantityInput";
-import EmployeeService from "../services/EmployeeService";
+import SearchComponent from "../components/SearchComponent";
+import UserCartComponent from "../components/UserCartComponent";
+import ShowProductComponent from "./ShowProductComponent";
 
-function ViewProduct (){
-    const [loading,setLoading] = useState([true]);
-    const [product,setProduct] = useState();
-    const token = localStorage.getItem('token');
-    const isAdmin = EmployeeService.isAdmin()
+function ViewProduct() {
+    const token = localStorage.getItem("token");
+    const [product, setProduct] = useState([]);
+    const [cartProduct, setCartProduct] = useState([]);
+    const [searchProduct, setSearchProduct] = useState("");
+    const [showCart, setShowCart] = useState(false);
 
-    useEffect(()=>{
-        fetchProduct();
-    },[])
+    useEffect(() => {
+        fetchData();
+    }, []);
 
-    const fetchProduct = async () => {
+    const fetchData = async () => {
         try {
             const response = await ProductService.getAllProduct(token);
+            console.log(response.listProduct);
             setProduct(response.listProduct);
-            setLoading(false);
         } catch (error) {
-            swal("Failed!" , "Failed fetching data", 'error')
+            setProduct([]);
+            swal("success", "San pham hien tai dang trong", "")
         }
-    }
+    };
 
-    if(loading){
-        return <h4>Loading Product Data</h4>
-    }else{
-        var prodcut_HTMLABLE = "";
-        prodcut_HTMLABLE = product.map((prod, index) => {
-            return (
-                <QuantityInput prod={prod} index={index} isAdmin={isAdmin}/>
-            )
-        })
-    }
+    const addProductToCartFunction = (newProduct) => {
+        const alreadyProduct = cartProduct.find((item) => item.product.id === newProduct.id);
+
+        if (alreadyProduct) {
+            const latestCartUpdate = cartProduct.map((item) =>
+                item.product.id === newProduct.id
+                    ? { ...item, quantity: item.quantity + 1 }
+                    : item
+            );
+            setCartProduct(latestCartUpdate);
+        } else {
+            setCartProduct([...cartProduct, { product: newProduct, quantity: 1 }]);
+        }
+
+        
+    };
+
+    const deleteProductFromCartFunction = (productDelete) => {
+        const updatedCart = cartProduct.filter((item) => item.product.id !== productDelete.id);
+        setCartProduct(updatedCart);
+    };
+
+    const totalAmountCalculationFunction = () => {
+        return cartProduct.reduce((acc, item) => acc + item.product.price * item.quantity, 0);
+    };
+
+    const productSearchUserFunction = (event) => {
+        setSearchProduct(event.target.value);
+    };
+
+    const filterProductFunction = product.filter((prod) =>
+        prod.productName.toLowerCase().includes(searchProduct.toLowerCase())
+    );
 
     return (
-        <div>
-            <div className="container">
-                <div className="row">
-                    <div className="col-md-12">
-                        <div className="card">
-                            <div className="card-header">
-                                <h4>Product
-                                    {isAdmin === true ? 
-                                        <Link to={`/add-product`} className="btn btn-primary btn-sm float-end">Thêm sản phẩm</Link>
-                                        :
-                                        <Link to={`/my-cart`} className="btn btn-primary btn-sm float-end">Giỏ Hàng Của Tôi</Link>
-                                    
-                                    }
-                                </h4>
-                            </div>
-                            <div className="card-body">
-                                
-                                <table className="table table-bordered table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>Product Name</th>
-                                            <th>Description</th>
-                                            <th>Price</th>
-                                            <th>Quantity {isAdmin === true ? "left" : ""}</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {prodcut_HTMLABLE}
-                                    </tbody>
-                                </table>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div className="App">
+            <SearchComponent
+                searchProduct={searchProduct}
+                productSearchUserFunction={productSearchUserFunction}
+            />
+            <h4>
+                <button className="btn btn-danger btn-sm float-end" onClick={()=>setShowCart(!showCart)}>
+                    {showCart ? "Ẩn Giỏ Hàng" : "Giỏ Hàng Của Tôi"}
+                </button>
+            </h4>
+            <main className="App-main">
+                <ShowProductComponent
+                    product={product}
+                    filterProductFunction={filterProductFunction}
+                    addProductToCartFunction={addProductToCartFunction}
+                />
+                {showCart && <UserCartComponent
+                    cartProduct={cartProduct}
+                    deleteProductFromCartFunction={deleteProductFromCartFunction}
+                    totalAmountCalculationFunction={totalAmountCalculationFunction}
+                    setCartProduct={setCartProduct}
+                ></UserCartComponent>}
+            </main>
         </div>
     );
 }
