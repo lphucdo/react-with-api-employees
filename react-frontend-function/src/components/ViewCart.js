@@ -41,7 +41,8 @@ function ViewCart(){
                     <div className="col-md-12">
                         <div className="card">
                             <div className="card-header">
-                                <h4>CART CRUD
+                                <h4>
+                                    Orders
                                 </h4>
                             </div>
                             <div className="card-body">

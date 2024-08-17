@@ -1,13 +1,13 @@
 import axios from "axios";
 
 class CartService{
-    static EMPLOYEE_API_BASE_URL = "http://localhost:8080/public/cart";
+    static EMPLOYEE_API_BASE_URL = "http://localhost:8080/public/order";
     
 
     static async addCart(data, token){
         try {
             const response = 
-            await axios.post(`${CartService.EMPLOYEE_API_BASE_URL}/addcart`, data, 
+            await axios.post(`${CartService.EMPLOYEE_API_BASE_URL}/add-order`, data, 
                 {
                     headers: {Authorization: `Bearer ${token}`}
                 }
@@ -22,7 +22,7 @@ class CartService{
     static async deleteCartByIdCart(id, token){
         try {
             const response = 
-            await axios.delete(`${this.EMPLOYEE_API_BASE_URL}/delete-cart-by-id/${id}`,
+            await axios.delete(`${this.EMPLOYEE_API_BASE_URL}/delete-order-by-id/${id}`,
                 {
                     headers: {Authorization: `Bearer ${token}`}
                 }
@@ -35,7 +35,7 @@ class CartService{
 
     static async getAllCart(token){
         try {
-            const response = await axios.get(`${CartService.EMPLOYEE_API_BASE_URL}/list-all-cart`,
+            const response = await axios.get(`${CartService.EMPLOYEE_API_BASE_URL}/list-all-order`,
                 {
                     headers: {Authorization: `Bearer ${token}`}
                 }
@@ -47,7 +47,7 @@ class CartService{
     }
     static async getAllCartByUser(token){
         try {
-            const response = await axios.get(`${CartService.EMPLOYEE_API_BASE_URL}/list-cart-by-user`,
+            const response = await axios.get(`${CartService.EMPLOYEE_API_BASE_URL}/list-order-by-user`,
                 {
                     headers: {Authorization: `Bearer ${token}`}
                 }

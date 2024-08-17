@@ -1,6 +1,9 @@
 //components/UserCartComponent.js
  
 import React from 'react';
+import swal from 'sweetalert';
+import CartService from '../services/CartService';
+import EmployeeService from '../services/EmployeeService';
  
 function UserCartComponent({
     cartProduct,
@@ -11,6 +14,13 @@ function UserCartComponent({
     // nhận cartCourse là danh sách sản phẩm
     // hàm delete theo từng cart và tổng tiền
     // cái set Cartcourse nữa
+    const addOrders = () => {
+        const token = EmployeeService.getToken();
+
+        console.log(cartProduct);
+        // CartService.addCart(cartProduct, token)
+        swal("success", "Them Order Thanh Cong" , "success")
+    }
 return (
 <div className={`cart ${cartProduct.length > 0 ? 'active' : ''}`}>
     {/* kiểm tra xem cartCourse.length có sản phẩm nào không */}
@@ -93,6 +103,8 @@ return (
             className="checkout-button"
             disabled={cartProduct.length === 0 || 
             totalAmountCalculationFunction() === 0}
+
+            onClick={(e)=>{addOrders()}}
         >
             Proceed to Payment
         </button>

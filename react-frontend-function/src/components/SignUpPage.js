@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import { useNavigate } from 'react-router-dom';
-import {MDBContainer, MDBInput, MDBBtn} from 'mdb-react-ui-kit'
+import {MDBContainer, MDBInput} from 'mdb-react-ui-kit'
 import EmployeeService from '../services/EmployeeService';
 import swal from "sweetalert"
 function SignUpPage(){
@@ -8,7 +8,7 @@ function SignUpPage(){
     const [password, setPassword] = useState('');
     const [empName, setEmpname] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [position, setPosition] = useState('');
+    const [role, setRole] = useState('');
     const [error, setError] = useState('');
     const navigation = useNavigate();
     
@@ -28,7 +28,7 @@ function SignUpPage(){
                 username: username,
                 password: confirmPassword,
                 empName: empName,
-                position: position
+                role: role
             };
             const token = localStorage.getItem('token')
             const response = await EmployeeService.register(data,token)
@@ -60,9 +60,18 @@ function SignUpPage(){
                     <MDBInput wrapperClass='mb-3' placeholder='Confirm Password' id='confirmPassword' type='password'
                               value={confirmPassword} 
                               onChange={(e) => setConfirmPassword(e.target.value)}/> 
-                    <MDBInput wrapperClass='mb-3' placeholder='position' id='position' type='text'
-                              value={position} 
-                              onChange={(e) => setPosition(e.target.value)}/> 
+                    {/* <MDBInput wrapperClass='mb-3' placeholder='role' id='role' type='text'
+                              value={role} 
+                              onChange={(e) => setRole(e.target.value)}/>  */}
+
+                    <select className="form-select mb-3" aria-label="Default select example" id='role' value={role}
+                        onChange={(e)=>setRole(e.target.value)} required
+                    >
+                        {/* <option selected disabled>Select role you want to choose</option> */}
+                        <option value="USER">USER</option>
+                        <option value="EDITOR">EDITOR</option>
+                        <option value="ADMIN">ADMIN</option>
+                    </select>
                     <button className="mb-4 d-block mx-auto fixed-action-btn btn-primary"
                             style={{height: '40px', width: '100%'}} 
                             onClick={handleSignup}>Đăng ký 

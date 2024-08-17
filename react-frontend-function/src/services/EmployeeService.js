@@ -19,10 +19,7 @@ class EmployeeService {
     static async register(userData, token){
         try {
             const response = 
-            await axios.post(`${EmployeeService.EMPLOYEE_API_BASE_URL}/auth/register`, userData, 
-                {
-                 headers: {Authorization: `Bearer ${token}`}
-                }
+            await axios.post(`${EmployeeService.EMPLOYEE_API_BASE_URL}/auth/register`, userData
             );
 
             return response.data;
@@ -117,6 +114,12 @@ class EmployeeService {
 
     static logout(){
         localStorage.clear();
+        sessionStorage.clear();
+        document.cookie.split(";").forEach((cookie) => {
+            document.cookie = cookie
+                .replace(/^ +/, "")
+                .replace(/=.*/, "=;expires=" + new Date(0).toUTCString() + ";path=/");
+        });
     }
 
     
