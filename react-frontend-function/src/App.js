@@ -10,7 +10,7 @@ import SignUpPage from './components/SignUpPage';
 import MyProfile from './components/MyProfile';
 import FileUploadComponent from './components/FileUploadComponent';
 import ViewProduct from './components/ViewProduct';
-import ViewCart from './components/ViewCart';
+import ViewOrder from './components/VIewOrder';
 import MyCart from './components/MyCart';
 import AddProduct from './components/AddProduct';
 function App() {
@@ -22,7 +22,7 @@ function App() {
           <Route path='/' element={<ViewProduct />}/>
           <Route path='/employees' element={<ViewEmployee />}/>
           <Route path='/products' element={<ViewProduct />}/>
-          <Route path='/orders' element={<ViewCart />}/>
+          <Route path='/orders' element={<ViewOrder />}/>
           <Route path='/add-employee' element={<AddEmployee />}/>
           <Route path='/add-product' element={<AddProduct />}/>
           <Route path='/edit-employee/:id' element={<EditEmployee />}/>

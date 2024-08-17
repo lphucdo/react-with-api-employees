@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import CartService from "../services/CartService"
+import OrderService from "../services/OrderService"
 function MyCart(){
     const [cart,setCart] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -13,7 +13,7 @@ function MyCart(){
     const fetchCartData = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await CartService.getAllCartByUser(token);
+            const response = await OrderService.getAllCartByUser(token);
             setCart(response.listCart);
             console.log(response);
             setLoading(false)

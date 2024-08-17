@@ -1,5 +1,5 @@
 import React,{useState} from "react";
-import CartService from "../services/CartService";
+import OrderService from "../services/OrderService";
 import swal from "sweetalert";
 import { Link } from "react-router-dom";
 import ProductService from "../services/ProductService";
@@ -16,7 +16,7 @@ function QuantityInput({prod,index,isAdmin}){
                 quantity: quantity
             }
             try {
-                const response = await CartService.addCart(payload , token);
+                const response = await OrderService.addCart(payload , token);
                 swal("Successfully", response.message ? response.message : "Them thanh cong" , "success");
             } catch (error) {
                 throw error;

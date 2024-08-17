@@ -51,36 +51,38 @@ function LoginPage() {
             <div className="border rounded-lg p-4" style={{ width: '500px', height: 'auto' }}>
                 <MDBContainer className="p-3">
                     <h2 className="mb-4 text-center">Trang Đăng nhập</h2>
-                    <MDBInput 
-                        wrapperClass='mb-4' 
-                        placeholder='Username' 
-                        id='username' 
-                        value={username} 
-                        type='text' 
-                        onChange={(e) => setUsername(e.target.value)} 
-                        required 
-                    />
-                    <MDBInput 
-                        wrapperClass='mb-4' 
-                        placeholder='Password' 
-                        id='password' 
-                        type='password' 
-                        value={password} 
-                        onChange={(e) => setPassword(e.target.value)} 
-                        required 
-                    />
-                    {error && <p className="text-danger">{error}</p>}
-                    <div className="mb-4">
-                        <input type="checkbox" id="rememberMe" />
-                        <label htmlFor="rememberMe" className="ml-2">Remember me?</label>
-                    </div>
-                    <MDBBtn 
-                        className="mb-4 d-block btn-primary" 
-                        style={{ height: '50px', width: '100%' }} 
-                        onClick={handleLogin}
-                    >
-                        Đăng nhập
-                    </MDBBtn>
+                    <form onSubmit={handleLogin}>
+                        <MDBInput 
+                            wrapperClass='mb-4' 
+                            placeholder='Username' 
+                            id='username' 
+                            value={username} 
+                            type='text' 
+                            onChange={(e) => setUsername(e.target.value)} 
+                            required 
+                        />
+                        <MDBInput 
+                            wrapperClass='mb-4' 
+                            placeholder='Password' 
+                            id='password' 
+                            type='password' 
+                            value={password} 
+                            onChange={(e) => setPassword(e.target.value)} 
+                            required 
+                        />
+                        {error && <p className="text-danger">{error}</p>}
+                        <div className="mb-4">
+                            <input type="checkbox" id="rememberMe" />
+                            <label htmlFor="rememberMe" className="ml-2">Remember me?</label>
+                        </div>
+                        <MDBBtn 
+                            className="mb-4 d-block btn-primary" 
+                            style={{ height: '50px', width: '100%' }} 
+                            type="submit"
+                        >
+                            Đăng nhập
+                        </MDBBtn>
+                    </form>
                     <div className="text-center">
                         <p>Chưa có tài khoản? <a href="/register">Đăng ký</a></p>
                     </div>

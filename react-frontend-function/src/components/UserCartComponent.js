@@ -2,7 +2,7 @@
  
 import React from 'react';
 import swal from 'sweetalert';
-import CartService from '../services/CartService';
+import OrderService from '../services/OrderService';
 import EmployeeService from '../services/EmployeeService';
  
 function UserCartComponent({
@@ -16,10 +16,13 @@ function UserCartComponent({
     // cái set Cartcourse nữa
     const addOrders = () => {
         const token = EmployeeService.getToken();
-
-        console.log(cartProduct);
-        // CartService.addCart(cartProduct, token)
-        swal("success", "Them Order Thanh Cong" , "success")
+        const data = cartProduct.map((item)=>{
+                return {...item, price: item.product.price}
+            }
+        );
+        OrderService.addOrder(data, token);
+        console.log(data);
+        swal("Thanh Cong", "Them Order Thanh Cong" , "success")
     }
 return (
 <div className={`cart ${cartProduct.length > 0 ? 'active' : ''}`}>

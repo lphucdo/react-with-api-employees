@@ -33,8 +33,8 @@ function ViewProduct() {
         if (alreadyProduct) {
             const latestCartUpdate = cartProduct.map((item) =>
                 item.product.id === newProduct.id
-                    ? { ...item, quantity: item.quantity + 1 }
-                    : item
+                    ? { ...item, quantity: item.quantity + 1}
+                    : {...item}
             );
             setCartProduct(latestCartUpdate);
         } else {

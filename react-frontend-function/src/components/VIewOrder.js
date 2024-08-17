@@ -1,24 +1,26 @@
 
 import React,{useState, useEffect} from "react";
-import CartService from "../services/CartService"
-import Cart from "./Cart";
+import OrderService from "../services/OrderService"
+import Order from "./Order";
 import swal from "sweetalert";
-function ViewCart(){
+function ViewOrder(){
     const token = localStorage.getItem("token");
-    const [cart,setCart] = useState();
+    const [order,setOrder] = useState();
     const [loading,setLoading] = useState(true);
     useEffect(()=>{
-        fetchAllCart();
-    }, [])
+        fetchAllOrder();
+    },[])
     
-    const fetchAllCart = async () => {
+    const fetchAllOrder = async () => {
         try {
-            const response = await CartService.getAllCart(token)
-            setCart(response.listCart)
-            console.log(response.listCart);
+            const response = await OrderService.getAllOrder(token)
+            
+            setOrder(response)
+            console.log(response);
             swal("Xin Chao", response.message ? response.message : "Hi" , "success")
-            setLoading(false);
+            setLoading(false)
         } catch (error) {
+            setLoading(true)
             console.log(error);
         }
     }
@@ -27,9 +29,9 @@ function ViewCart(){
         return <h4>ON LOADING</h4>
     }else{
         var HTML = "";
-        HTML = cart.map((item,index)=>{
+        HTML = order.map((item)=>{
             return (
-                <Cart cart={item} index={index}></Cart>
+                <Order order={item}></Order>
             )
         })
     }
@@ -50,12 +52,13 @@ function ViewCart(){
                                 <table className="table table-bordered table-striped">
                                     <thead>
                                         <tr>
-                                            <th>ID</th>
+                                            <th>ID Order</th>
+                                            <th>ID Product</th>
                                             <th>Product Name</th>
-                                            <th>Description</th>
-                                            <th>Price</th>
                                             <th>Quantity</th>
-                                            <th>By User</th>
+                                            <th>UserId</th>
+                                            <th>Name Employee</th>
+                                            <th>Order Time</th>
                                             <th>Total Cost</th>
                                         </tr>
                                     </thead>
@@ -74,4 +77,4 @@ function ViewCart(){
 
 }
 
-export default ViewCart;
+export default ViewOrder;
