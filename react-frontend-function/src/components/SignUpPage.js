@@ -4,11 +4,13 @@ import {MDBContainer, MDBInput} from 'mdb-react-ui-kit'
 import EmployeeService from '../services/EmployeeService';
 import swal from "sweetalert"
 function SignUpPage(){
+    const [token, setToken] = useState(EmployeeService.getToken());
+
     const [username, setUserName] = useState('');
     const [password, setPassword] = useState('');
     const [empName, setEmpname] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [role, setRole] = useState('');
+    const [role, setRole] = useState('USER');
     const [error, setError] = useState('');
     const navigation = useNavigate();
     
@@ -30,15 +32,24 @@ function SignUpPage(){
                 empName: empName,
                 role: role
             };
-            const token = localStorage.getItem('token')
             const response = await EmployeeService.register(data,token)
 
             console.log(response);
             swal("Sucessful" , response.message ? response.message : "THem thanh cong" , "success")
 
 
-            navigation('/login')
-            
+            const userData = await EmployeeService.login(username, password);
+            console.log("Dang ky: ", userData);
+            if (userData.token) {
+                const rememberMe = true;
+                rememberMe && localStorage.setItem('token', userData.token);
+                localStorage.setItem("rememberMe", rememberMe);
+                sessionStorage.setItem('token', userData.token);
+                sessionStorage.setItem('role', userData.role);
+                sessionStorage.setItem('isAdmin', EmployeeService.isAdmin());
+                swal("Successful!", userData.message || "Đăng nhập thành công", "success");
+            }
+            navigation("/");
         } catch (error) {
             console.log("Dang ky that bai: ", error.respone ? error.respone.data : error.message);
             setError(error.respone ? error.respone.data : error.message);

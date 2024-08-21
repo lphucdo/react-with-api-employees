@@ -2,9 +2,10 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import ProductService from "../services/ProductService"
 import swal from "sweetalert";
+import EmployeeService from "../services/EmployeeService";
 function AddProduct(){
     const navigate = useNavigate();
-    const token = localStorage.getItem('token');
+    const token = EmployeeService.getToken();
     const [productInput,setProductInput] = useState({
         productId: '',
         description: '',

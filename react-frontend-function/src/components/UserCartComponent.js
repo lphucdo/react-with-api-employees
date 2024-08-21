@@ -1,6 +1,6 @@
 //components/UserCartComponent.js
  
-import React from 'react';
+import React, { useState } from 'react';
 import swal from 'sweetalert';
 import OrderService from '../services/OrderService';
 import EmployeeService from '../services/EmployeeService';
@@ -11,11 +11,13 @@ function UserCartComponent({
     totalAmountCalculationFunction,
     setCartProduct,
 }) {
+    const [token, setToken] = useState(EmployeeService.getToken());
+
     // nhận cartCourse là danh sách sản phẩm
     // hàm delete theo từng cart và tổng tiền
     // cái set Cartcourse nữa
     const addOrders = () => {
-        const token = EmployeeService.getToken();
+
         const data = cartProduct.map((item)=>{
                 return {...item, price: item.product.price}
             }

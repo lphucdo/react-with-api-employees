@@ -5,13 +5,14 @@ import swal from "sweetalert";
 function MyProfile() {
     const [profileInfo, setProfileInfo] = useState({});
     const navigate = useNavigate();
+    const [token, setToken] = useState(EmployeeService.getToken());
+
     useEffect(()=>{
         fecthProfileInfo();
     },[])
 
     const fecthProfileInfo = async () => {
         try{
-            const token = localStorage.getItem('token');
             const response = await EmployeeService.getYourProfile(token)
             console.log(response.employee);
             swal("Successful", `Xin chào ${response.employee.empName}`, "success")

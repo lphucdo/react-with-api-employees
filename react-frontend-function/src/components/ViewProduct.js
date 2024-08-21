@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from "react";
-import swal from "sweetalert";
 import ProductService from "../services/ProductService";
 import SearchComponent from "../components/SearchComponent";
 import UserCartComponent from "../components/UserCartComponent";
 import ShowProductComponent from "./ShowProductComponent";
+import { useNavigate } from "react-router-dom";
+import EmployeeService from "../services/EmployeeService";
 
 function ViewProduct() {
-    const token = localStorage.getItem("token");
+    const [token, setToken] = useState(EmployeeService.getToken());
     const [product, setProduct] = useState([]);
     const [cartProduct, setCartProduct] = useState([]);
     const [searchProduct, setSearchProduct] = useState("");
     const [showCart, setShowCart] = useState(false);
+    const navigation = useNavigate();
 
     useEffect(() => {
         fetchData();
@@ -23,7 +25,7 @@ function ViewProduct() {
             setProduct(response.listProduct);
         } catch (error) {
             setProduct([]);
-            swal("success", "San pham hien tai dang trong", "")
+            navigation("/login")
         }
     };
 

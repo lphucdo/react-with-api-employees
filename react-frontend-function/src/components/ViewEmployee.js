@@ -6,7 +6,8 @@ import EmployeeService from "../services/EmployeeService";
 function ViewEmployee() {
     const [loading, setLoading] = useState(true);
     const [employees, setEmployees] = useState([]);
-    const token = localStorage.getItem('token');
+    const [token, setToken] = useState(EmployeeService.getToken());
+
     const authenticated = EmployeeService.isAuthenticated();
     const isAdmin = EmployeeService.isAdmin();
     console.log("You are admin? " + isAdmin);
@@ -17,7 +18,6 @@ function ViewEmployee() {
             navigate('/login');
         }else{
             fetchEmployees();
-
         }
     }, []);
 
@@ -32,9 +32,6 @@ function ViewEmployee() {
             console.error('Error fetching users:', error);
         }
     }
-
-    
-
     const deleteEmployee = async (e, id) => {
 
         var confirm = window.confirm("Are you sure to delete this employee???")

@@ -3,30 +3,46 @@ import { Link } from 'react-router-dom';
 import EmployeeService from '../services/EmployeeService';
 
 function Navbar() {
-  const [isLogged, setIsLogged] = useState(EmployeeService.isAuthenticated());
   const [isAdmin, setIsAdmin] = useState(EmployeeService.isAdmin());
+  const [isLogged, setIsLogged] = useState(EmployeeService.isAuthenticated());
 
   useEffect(() => {
-    // Update states when component mounts
-    setIsLogged(EmployeeService.isAuthenticated());
-    setIsAdmin(EmployeeService.isAdmin());
-  }, []);
+    const checkAdminStatus = () => {
+      setIsAdmin(EmployeeService.isAdmin());
+    };
+  
+    checkAdminStatus();
+  
+    const handleStorageChange = (event) => {
+      if (event.key === 'role' || event.key === null) {
+        checkAdminStatus();
+      }
+    };
+  
+    window.addEventListener('storage', handleStorageChange);
+  
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  },  [isAdmin,isLogged]);
 
   const handleLogout = () => {
     const confirmLogout = window.confirm("Do you want to log out?");
     if (confirmLogout) {
       EmployeeService.logout();
-      setIsLogged(false);  // Set to false instead of empty string
       setIsAdmin(false);
+      setIsLogged(false);
     }
   };
+  var i = 0;
+  console.log("isAdmin: ", i++, isAdmin);
+  console.log("isLogged: ", i++, isLogged);
 
   return (
     <div className="pb-5">
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
         <div className="container">
           <Link className="navbar-brand" to="/">{isAdmin ? "ADMINISTRATOR" : "USER PRODUCT"}</Link>
-
           <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span className="navbar-toggler-icon"></span>
           </button>
@@ -51,7 +67,7 @@ function Navbar() {
                   </li>
                 </>
               )}
-              {isLogged ? (
+              {isLogged &&
                 <li className="nav-item">
                   <div className="dropdown text-end">
                     <a href="/my-info" className="d-block link-body-emphasis text-decoration-none dropdown-toggle"
@@ -81,11 +97,7 @@ function Navbar() {
                     </ul>
                   </div>
                 </li>
-              ) : (
-                <li className="nav-item">
-                  <Link className="nav-link" to="/login">Login</Link>
-                </li>
-              )}
+               }
             </ul>
           </div>
         </div>

@@ -3,10 +3,11 @@ import OrderService from "../services/OrderService";
 import swal from "sweetalert";
 import { Link } from "react-router-dom";
 import ProductService from "../services/ProductService";
+import EmployeeService from "../services/EmployeeService";
 function QuantityInput({prod,index,isAdmin}){
 
     const [quantity,setQuantity] = useState(1);
-    const token = localStorage.getItem('token');
+    const [token, setToken] = useState(EmployeeService.getToken());
     const addToCart= async (id) => {
         var confirm = window.confirm("Add to your cart? ");
         

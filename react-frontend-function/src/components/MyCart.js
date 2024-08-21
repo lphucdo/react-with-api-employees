@@ -1,9 +1,12 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import OrderService from "../services/OrderService"
+import EmployeeService from "../services/EmployeeService";
 function MyCart(){
     const [cart,setCart] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [token, setToken] = useState(EmployeeService.getToken());
+
     const navigate = useNavigate();
 
     useEffect(()=>{
@@ -12,7 +15,6 @@ function MyCart(){
 
     const fetchCartData = async () => {
         try {
-            const token = localStorage.getItem('token');
             const response = await OrderService.getAllCartByUser(token);
             setCart(response.listCart);
             console.log(response);

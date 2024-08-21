@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import OrderService from "../services/OrderService";
 import swal from "sweetalert";
+import EmployeeService from "../services/EmployeeService";
 
 function Order({order}){
-    const token = localStorage.getItem('token');
+    const [token, setToken] = useState(EmployeeService.getToken());
     const deleteOrder = async (e,id) => {
         const thisClicked = e.currentTarget;
         try {
@@ -26,6 +27,7 @@ function Order({order}){
             <td>{order.employeeId}</td>
             <td>{order.empName}</td>
             <td>{order.orderTime}</td>
+            <td>{order.status === 1 ? "Đã Thanh Toán" : "Không xác định"}</td>
             <td>{order.totalAmount}</td>
 
             <td>

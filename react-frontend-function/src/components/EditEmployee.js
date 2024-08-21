@@ -8,6 +8,7 @@ function EditEmployee() {
     const {id} = useParams();
     const [loading, setLoading] = useState(true);
     const [employeeInput, setEmployee] = useState({});
+    const [token,setToken] = useState(EmployeeService.getToken());
     const [errorInput, setError] = useState([]);
     console.log("id: " + id);
     
@@ -18,7 +19,6 @@ function EditEmployee() {
     
     async function fecthDataById (){
         try {
-            const token = localStorage.getItem('token');
             const response = await EmployeeService.getEmployeeById(id, token);
             if(response.statusCode == 200){
                 setEmployee(response.employee);

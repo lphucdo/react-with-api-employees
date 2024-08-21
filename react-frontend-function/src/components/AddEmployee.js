@@ -6,7 +6,7 @@ import swal from 'sweetalert';
 function AddEmployee() {
     const navigate = useNavigate();
     const authenticated = EmployeeService.isAuthenticated();
-    const token = localStorage.getItem('token');
+    const token = EmployeeService.getToken();
     const [employeeInput, setEmployee] = useState({
         username: '',
         password: '',
