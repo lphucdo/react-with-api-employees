@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import org.hibernate.query.NativeQuery;
 import org.springframework.stereotype.Service;
 
 import com.lamdo.dto.request.OrderRequest;
@@ -103,51 +104,69 @@ public class OrderService {
 		return resp;
 	}
 	public List<ListOrderResponse> getAllOrder() {
+		
 		List<ListOrderResponse> resp = new ArrayList<>();
-		try {
-			List<Order> listOrder = orderRepository.findAll();
-			for(Order order: listOrder) {
-				StringBuilder productIDs = new StringBuilder();
-				StringBuilder productNames = new StringBuilder();
-				StringBuilder quantities = new StringBuilder();
-				
-				for(OrderItem item: order.getOrders()) {
-					if(productIDs.length() > 0) {
-						productIDs.append(", ");
-						productNames.append(", ");
-						quantities.append(", ");
-					}
-					
-					productIDs.append(item.getProduct().getId());
-					productNames.append(item.getProduct().getProductName());
-					quantities.append(item.getQuantity());
-				}
-				
-				ListOrderResponse listOrderResponse = new ListOrderResponse().builder()
-						.orderId(order.getId())
-						.employeeId(order.getEmployee().getId())
-						.empName(order.getEmployee().getEmpName())
-						.orderTime(dateFormatter(order.getOrderTime()))
-						.productId(productIDs.toString())
-						.productName(productNames.toString())
-						.quantity(quantities.toString())
-						.totalAmount(order.getTotalAmount())
-						.status(order.getStatus())
-						.build();
-				listOrderResponse.setStatusCode(200);
-				resp.add(listOrderResponse);
-				
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		List<Object[]> resultOrders = orderRepository.getAllOrders();
+		for(Object[] result : resultOrders) {
+			result.toString();
 		}
+		for(Object[] result : resultOrders) {
+			ListOrderResponse orderResponse = new ListOrderResponse();
+			orderResponse.setOrderId((int) result[0]);
+			orderResponse.setProductId((int) result[1]);
+			orderResponse.setProductName((String)result[2]);
+			orderResponse.setQuantity((int)result[3]);
+			orderResponse.setEmployeeId((int)result[4]);
+			orderResponse.setEmpName((String) result[5]);
+			orderResponse.setOrderTime(dateFormatter(result[6]));
+			orderResponse.setStatus((int) result[7]);
+			orderResponse.setTotalAmount(result[8]);
+			resp.add(orderResponse);
+		}
+//		try {
+//			List<Order> listOrder = orderRepository.findAll();
+//			for(Order order: listOrder) {
+//				StringBuilder productIDs = new StringBuilder();
+//				StringBuilder productNames = new StringBuilder();
+//				StringBuilder quantities = new StringBuilder();
+//				
+//				for(OrderItem item: order.getOrders()) {
+//					if(productIDs.length() > 0) {
+//						productIDs.append(", ");
+//						productNames.append(", ");
+//						quantities.append(", ");
+//					}
+//					
+//					productIDs.append(item.getProduct().getId());
+//					productNames.append(item.getProduct().getProductName());
+//					quantities.append(item.getQuantity());
+//				}
+//				
+//				ListOrderResponse listOrderResponse = new ListOrderResponse().builder()
+//						.orderId(order.getId())
+//						.employeeId(order.getEmployee().getId())
+//						.empName(order.getEmployee().getEmpName())
+//						.orderTime(dateFormatter(order.getOrderTime()))
+//						.productId(productIDs.toString())
+//						.productName(productNames.toString())
+//						.quantity(quantities.toString())
+//						.totalAmount(order.getTotalAmount())
+//						.status(order.getStatus())
+//						.build();
+//				listOrderResponse.setStatusCode(200);
+//				resp.add(listOrderResponse);
+//				
+//			}
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 		return resp;
 	}
 	
-	public String dateFormatter(Date date) {
+	public String dateFormatter(Object result) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss-dd/MM/yyyy");
-		System.out.println("Dinh dang lai ngay gio: "+ dateFormat.format(date));
-		return dateFormat.format(date);
+		System.out.println("Dinh dang lai ngay gio: "+ dateFormat.format(result));
+		return dateFormat.format(result);
 	}
 	
 	public ListOrderResponse getAllOrderByUserId(String token) {

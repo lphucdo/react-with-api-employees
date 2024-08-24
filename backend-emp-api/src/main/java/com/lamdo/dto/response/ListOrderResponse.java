@@ -16,13 +16,13 @@ import lombok.NoArgsConstructor;
 public class ListOrderResponse extends BaseResponse{
 //	private List<Order> listOrder;
 	private int orderId;
-	private String productId;
+	private int productId;
 	private String productName;
-	private String quantity;
+	private int quantity;
 	private int employeeId;
 	private String empName;
 	private String orderTime;
 	private int status;
-	private int totalAmount;
+	private Object totalAmount;
 	
 }
